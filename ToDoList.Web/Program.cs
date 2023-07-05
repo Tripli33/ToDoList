@@ -1,9 +1,13 @@
 using ToDoList.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using ToDoList.Infrastructure.Interfaces;
+using ToDoList.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 
 var connectionString = builder.Configuration.GetConnectionString("MySQL");
 builder.Services.AddDbContext<ApplicationContext>(options => {
