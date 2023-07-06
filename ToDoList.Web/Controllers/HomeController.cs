@@ -13,8 +13,8 @@ public class HomeController : Controller
     }
 
     public IActionResult Index()
-    {   
-        
-        return View();
+    {
+        var allTasks = _taskRepository.GetAllTasks();
+        return View(allTasks);
     }
 }
