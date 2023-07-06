@@ -1,6 +1,8 @@
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@model ToDoList.Domain.Entities.Task
 @using ToDoList.Domain.Enums
+@model ToDoList.Domain.Entities.Task
+@{
+    ViewData["Title"] = "Task Form";
+}
 <h1>ADD TASK</h1>
 <form asp-action="TaskForm" method="post">
     <div>
