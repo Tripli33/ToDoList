@@ -17,4 +17,15 @@ public class HomeController : Controller
         var allTasks = _taskRepository.GetAllTasks();
         return View(allTasks);
     }
+    [HttpGet]
+    public ViewResult TaskForm()
+    {
+        return View();
+    }
+    [HttpPost]
+    public async Task<ViewResult> TaskForm(Domain.Entities.Task task)
+    {
+        await _taskRepository.CreateAsync(task);
+        return View();
+    }
 }

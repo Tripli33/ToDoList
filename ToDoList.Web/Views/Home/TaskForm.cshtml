@@ -1,0 +1,29 @@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model ToDoList.Domain.Entities.Task
+@using ToDoList.Domain.Enums
+<h1>ADD TASK</h1>
+<form asp-action="TaskForm" method="post">
+    <div>
+        <label asp-for="Title">Title:</label>
+        <input asp-for="Title"/>
+    </div>
+    <div>
+        <label asp-for="Description">Description:</label>
+        <input asp-for="Description"/>
+    </div>
+    <div>
+        <label asp-for="DeadLine">Dead line:</label>
+        <input asp-for="DeadLine" type="datetime-local"/>
+    </div>
+    <div>
+        <select asp-for="Priority" asp-items="Html.GetEnumSelectList<Priority>()"></select>
+    </div>
+    <div>
+
+    </div>
+    <div>
+        <select asp-for="Status" asp-items="Html.GetEnumSelectList<Status>()"></select>
+    </div>
+    <button type="submit">Confirm</button>
+    <button asp-action="Index">Back</button>
+</form>

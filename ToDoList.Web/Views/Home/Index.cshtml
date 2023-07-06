@@ -1,10 +1,12 @@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model IQueryable<ToDoList.Domain.Entities.Task>
 @{
     ViewData["Title"] = "Index";
 }
-
-<h1>TASK LIST</h1>
-
+<form>
+    <h1>TASK LIST</h1>
+    <button asp-action="TaskForm">Add task</button>
+</form>
 <table>
     <thead>
         <tr>
