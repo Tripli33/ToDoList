@@ -12,10 +12,11 @@
     <div>
         <label asp-for="Description">Description:</label>
         <input asp-for="Description"/>
+        <p><i>Can be empty</i></p>
     </div>
     <div>
         <label asp-for="DeadLine">Dead line:</label>
-        <input asp-for="DeadLine" type="datetime-local"/>
+        <input asp-for="DeadLine" asp-format="{0:yyyy-MM-ddTHH:mm}"/>
     </div>
     <div>
         <select asp-for="Priority" asp-items="Html.GetEnumSelectList<Priority>()"></select>
@@ -28,4 +29,6 @@
     </div>
     <button type="submit">Confirm</button>
     <button asp-action="Index">Back</button>
+    // TODO Client-side validation
+    <div asp-validation-summary="All"></div>
 </form>

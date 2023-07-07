@@ -23,9 +23,12 @@ public class HomeController : Controller
         return View();
     }
     [HttpPost]
-    public async Task<ViewResult> TaskForm(Domain.Entities.Task task)
+    public async Task<IActionResult> TaskForm(Domain.Entities.Task task)
     {
+        if (!ModelState.IsValid){
+            return View();
+        }
         await _taskRepository.CreateAsync(task);
-        return View();
+        return RedirectToAction("Index");
     }
 }
