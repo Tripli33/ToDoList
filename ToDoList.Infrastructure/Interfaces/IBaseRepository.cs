@@ -9,4 +9,5 @@ public interface IBaseRepository<T>
     Task UpdateAsync(T entity);
 
     Task DeleteAsync(T entity);
+    Task DeleteByIdAsync(long entityId);
 }

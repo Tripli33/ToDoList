@@ -17,6 +17,10 @@ public class HomeController : Controller
         var allTasks = _taskRepository.GetAllTasks();
         return View(allTasks);
     }
+    public async Task<IActionResult> DeleteTask(long taskId){
+        await _taskRepository.DeleteByIdAsync(taskId);
+        return RedirectToAction("Index");
+    }
     [HttpGet]
     public ViewResult TaskForm()
     {

@@ -24,6 +24,13 @@ public class TaskRepository : ITaskRepository
         await _applicationContext.SaveChangesAsync();
     }
 
+    public async Task DeleteByIdAsync(long entityId)
+    {
+        var task = await _applicationContext.Tasks.FindAsync(entityId);
+        _applicationContext.Remove(task);
+        await _applicationContext.SaveChangesAsync();
+    }
+
     public IQueryable<Domain.Entities.Task> GetAllTasks()
     {
         return _applicationContext.Tasks;
@@ -39,4 +46,5 @@ public class TaskRepository : ITaskRepository
         _applicationContext.Tasks.Update(entity);
         await _applicationContext.SaveChangesAsync();
     }
+
 }

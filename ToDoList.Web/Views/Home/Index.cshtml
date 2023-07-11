@@ -27,7 +27,12 @@
                 <td>@task.DeadLine.ToString("dd MMM yyyy h:mm tt")</td>
                 <td>@task.Priority</td>
                 <td>@task.Status</td>
-                <td></td>
+                <td>
+                    <form asp-action="DeleteTask" method="post">
+                        <input type="hidden" name="taskId" value=@task.Id>
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
                 <td></td>
             </tr>
         }
