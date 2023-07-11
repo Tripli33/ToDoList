@@ -28,12 +28,17 @@
                 <td>@task.Priority</td>
                 <td>@task.Status</td>
                 <td>
+                    <form asp-action="UpdateTask" method="post">
+                        <input type="hidden" name="taskId" value=@task.Id>
+                        <button type="submit">Update</button>
+                    </form>
+                </td>
+                <td>
                     <form asp-action="DeleteTask" method="post">
                         <input type="hidden" name="taskId" value=@task.Id>
                         <button type="submit">Delete</button>
                     </form>
                 </td>
-                <td></td>
             </tr>
         }
     </tbody>

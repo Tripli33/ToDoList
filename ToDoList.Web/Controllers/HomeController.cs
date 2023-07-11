@@ -17,6 +17,10 @@ public class HomeController : Controller
         var allTasks = _taskRepository.GetAllTasks();
         return View(allTasks);
     }
+    public async Task<ActionResult> UpdateTask(long taskId){
+        var task = await _taskRepository.SelectAsync(taskId);
+        return View("TaskForm", task);
+    }
     public async Task<IActionResult> DeleteTask(long taskId){
         await _taskRepository.DeleteByIdAsync(taskId);
         return RedirectToAction("Index");
@@ -32,7 +36,12 @@ public class HomeController : Controller
         if (!ModelState.IsValid){
             return View();
         }
-        await _taskRepository.CreateAsync(task);
+        if (task.Id != 0){
+            await _taskRepository.UpdateAsync(task);
+        }
+        else{
+            await _taskRepository.CreateAsync(task);
+        }
         return RedirectToAction("Index");
     }
 }
