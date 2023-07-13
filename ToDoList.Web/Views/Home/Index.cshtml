@@ -28,6 +28,20 @@
                 <td>@task.Priority</td>
                 <td>@task.Status</td>
                 <td>
+                    @if(task.Status == Status.InProgress){
+                        <form asp-action="CloseTask" method="post">
+                            <input type="hidden" name="taskId" value=@task.Id>
+                            <button type="submit">Close</button>
+                        </form>
+                    }
+                    else if(task.Status == Status.NotStarted){
+                        <form asp-action="StartTask" method="post">
+                            <input type="hidden" name="taskId" value=@task.Id>
+                            <button type="submit">Start</button>
+                        </form>
+                    }
+                </td>
+                <td>
                     <form asp-action="UpdateTask" method="post">
                         <input type="hidden" name="taskId" value=@task.Id>
                         <button type="submit">Update</button>

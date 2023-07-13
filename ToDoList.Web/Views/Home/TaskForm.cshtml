@@ -1,4 +1,3 @@
-@using ToDoList.Domain.Enums
 @model ToDoList.Domain.Entities.Task
 @{
     ViewData["Title"] = "Task Form";
@@ -26,8 +25,13 @@
         <select asp-for="Priority" asp-items="Html.GetEnumSelectList<Priority>()"></select>
     </div>
     <div>
-        <select asp-for="Status" asp-items="Html.GetEnumSelectList<Status>()"></select>
+        <select asp-for="Status">
+            <option value="NotStarted">Not started</option>
+            <option value="InProgress">In progress</option>
+        </select>
     </div>
     <button type="submit">Confirm</button>
+</form>
+<form>
     <button asp-action="Index">Back</button>
 </form>
