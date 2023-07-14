@@ -1,17 +1,18 @@
 using System.ComponentModel.DataAnnotations;
 using ToDoList.Domain.Enums;
-
+using ToDoList.Domain.Validation;
 namespace ToDoList.Domain.Entities;
 
 public class Task
 {
     public long Id { get; set; }
-    [Required]
+    [Required(ErrorMessage = "The Title is required")]
     [StringLength(30)]
     public string Title { get; set; } = string.Empty;
     public string? Description { get; set; }
-    // TODO: Date-time validation
-    public DateTime DeadLine { get; set; } = DateTime.Today;
+    [Required(ErrorMessage = "The Dead line is required")]
+    [FutureDate(ErrorMessage = "The Dead line cannot be a past date")]
+    public DateTime DeadLine { get; set; }
     public Priority Priority { get; set; }
     public Status Status { get; set; }
 }

@@ -20,6 +20,7 @@
     <div>
         <label asp-for="DeadLine">Dead line:</label>
         <input asp-for="DeadLine" asp-format="{0:yyyy-MM-ddTHH:mm}"/>
+        <span asp-validation-for="DeadLine"></span>
     </div>
     <div>
         <select asp-for="Priority" asp-items="Html.GetEnumSelectList<Priority>()"></select>
