@@ -1,16 +1,19 @@
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Infrastructure.Interfaces;
 using ToDoList.Domain.Enums;
+using ToDoList.Service.Interfaces;
 
 namespace ToDoList.Web.Controllers;
 
 public class HomeController : Controller
 {
     private readonly ITaskRepository _taskRepository;
+    private readonly ITaskService _taskService;
 
-    public HomeController(ITaskRepository taskRepository)
+    public HomeController(ITaskRepository taskRepository, ITaskService taskService)
     {
         _taskRepository = taskRepository;
+        _taskService = taskService;
     }
 
     public IActionResult Index()
@@ -28,16 +31,12 @@ public class HomeController : Controller
     }
     public async Task<IActionResult> StartTask(long taskId)
     {
-        var task = await _taskRepository.SelectAsync(taskId);
-        task.Status = Status.InProgress;
-        await _taskRepository.UpdateAsync(task);
+        await _taskService.UpdateTaskStatus(taskId, Status.InProgress);
         return RedirectToAction("Index");
     }
     public async Task<IActionResult> CloseTask(long taskId)
     {
-        var task = await _taskRepository.SelectAsync(taskId);
-        task.Status = Status.Completed;
-        await _taskRepository.UpdateAsync(task);
+        await _taskService.UpdateTaskStatus(taskId, Status.Completed);
         return RedirectToAction("Index");
     }
     [HttpGet]

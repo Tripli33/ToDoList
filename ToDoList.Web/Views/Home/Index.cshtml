@@ -16,44 +16,13 @@
             <th>Status</th>
             <th></th>
             <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var task in Model)
         {
-            <tr>
-                <td>@task.Title</td>
-                <td>@task.Description</td>
-                <td>@task.DeadLine.ToString("dd MMM yyyy h:mm tt")</td>
-                <td>@task.Priority</td>
-                <td>@task.Status</td>
-                <td>
-                    @if(task.Status == Status.InProgress){
-                        <form asp-action="CloseTask" method="post">
-                            <input type="hidden" name="taskId" value=@task.Id>
-                            <button type="submit">Close</button>
-                        </form>
-                    }
-                    else if(task.Status == Status.NotStarted){
-                        <form asp-action="StartTask" method="post">
-                            <input type="hidden" name="taskId" value=@task.Id>
-                            <button type="submit">Start</button>
-                        </form>
-                    }
-                </td>
-                <td>
-                    <form asp-action="UpdateTask" method="post">
-                        <input type="hidden" name="taskId" value=@task.Id>
-                        <button type="submit">Update</button>
-                    </form>
-                </td>
-                <td>
-                    <form asp-action="DeleteTask" method="post">
-                        <input type="hidden" name="taskId" value=@task.Id>
-                        <button type="submit">Delete</button>
-                    </form>
-                </td>
-            </tr>
+            <partial name="_TaskSummary" model="task"/>
         }
     </tbody>
 </table>
