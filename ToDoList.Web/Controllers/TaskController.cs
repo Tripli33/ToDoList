@@ -5,12 +5,12 @@ using ToDoList.Service.Interfaces;
 
 namespace ToDoList.Web.Controllers;
 
-public class HomeController : Controller
+public class TaskController : Controller
 {
     private readonly ITaskRepository _taskRepository;
     private readonly ITaskService _taskService;
 
-    public HomeController(ITaskRepository taskRepository, ITaskService taskService)
+    public TaskController(ITaskRepository taskRepository, ITaskService taskService)
     {
         _taskRepository = taskRepository;
         _taskService = taskService;
