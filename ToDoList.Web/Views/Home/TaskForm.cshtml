@@ -5,7 +5,10 @@
 <h1>ADD TASK</h1>
 <form asp-action="TaskForm" method="post">
     <div>
-        <input asp-for="Id" type="hidden"/>
+        @if (Model != null)
+        {
+            <input type="hidden" asp-for="Id"/>
+        }
     </div>
     <div>
         <label asp-for="Title">Title:</label>
