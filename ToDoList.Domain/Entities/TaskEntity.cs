@@ -16,5 +16,5 @@ public class TaskEntity
     public Priority Priority { get; set; }
     public Status Status { get; set; }
     public long UserId { get; set; }
-    public User User { get; set; }
+    public User User { get; set; } = null!;
 }

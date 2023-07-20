@@ -5,7 +5,7 @@ namespace ToDoList.Domain.Entities;
 
 public class User
 {
-    public long Id { get; set; }
+    public long UserId { get; set; }
     [Display(Name = "User name")]
     [Required(ErrorMessage = "The User name is required")]
     [StringLength(20)]
@@ -23,5 +23,5 @@ public class User
     [DataType(DataType.Password)]
     [Compare("Password")]
     public string ConfirmPassword { get; set; } = String.Empty;
-    public ICollection<Task>? Tasks { get; set; }
+    public ICollection<TaskEntity> Tasks { get; set; } = new List<TaskEntity>();
 }
