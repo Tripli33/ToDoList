@@ -5,7 +5,7 @@ namespace ToDoList.Infrastructure;
 
 public class ApplicationContext : DbContext
 {
-    public DbSet<Domain.Entities.Task> Tasks { get; set; }
+    public DbSet<TaskEntity> Tasks { get; set; }
     public DbSet<User> Users { get; set; }
     public ApplicationContext(DbContextOptions options) : base(options)
     {

@@ -1,6 +1,8 @@
+using ToDoList.Domain.Entities;
+
 namespace ToDoList.Infrastructure.Interfaces;
 
-public interface ITaskRepository : IBaseRepository<Domain.Entities.Task>
+public interface ITaskRepository : IBaseRepository<TaskEntity>
 {
-    IQueryable<Domain.Entities.Task> GetAllTasks();
+    IQueryable<TaskEntity> GetAllTasks();
 }

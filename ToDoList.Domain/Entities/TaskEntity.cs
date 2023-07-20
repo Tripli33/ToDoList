@@ -3,7 +3,7 @@ using ToDoList.Domain.Enums;
 using ToDoList.Domain.Validation;
 namespace ToDoList.Domain.Entities;
 
-public class Task
+public class TaskEntity
 {
     public long Id { get; set; }
     [Required(ErrorMessage = "The Title is required")]

@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using ToDoList.Infrastructure.Interfaces;
 using ToDoList.Domain.Enums;
 using ToDoList.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using ToDoList.Domain.Entities;
 
 namespace ToDoList.Web.Controllers;
-
+[Authorize]
 public class TaskController : Controller
 {
     private readonly ITaskRepository _taskRepository;
@@ -45,7 +47,7 @@ public class TaskController : Controller
         return View();
     }
     [HttpPost]
-    public async Task<IActionResult> TaskForm(Domain.Entities.Task task)
+    public async Task<IActionResult> TaskForm(TaskEntity task)
     {
         if (!ModelState.IsValid){
             return View();

@@ -1,4 +1,4 @@
-@model ToDoList.Domain.Entities.Task
+@model ToDoList.Domain.Entities.TaskEntity
 @{
     ViewData["Title"] = "Task Form";
 }
@@ -34,8 +34,9 @@
             <option value="InProgress">In progress</option>
         </select>
     </div>
-    <button type="submit">Confirm</button>
+    <div>
+        <button type="submit">Confirm</button>
+        <button><a asp-controller="Task" asp-action="Index">Back</a></button>
+    </div>
 </form>
-<form>
-    <button asp-action="Index">Back</button>
-</form>
+
