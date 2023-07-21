@@ -1,6 +1,5 @@
 using ToDoList.Domain.Enums;
 using ToDoList.Infrastructure.Interfaces;
-using ToDoList.Infrastructure.Repositories;
 using ToDoList.Service.Interfaces;
 
 namespace ToDoList.Service.Implementations;

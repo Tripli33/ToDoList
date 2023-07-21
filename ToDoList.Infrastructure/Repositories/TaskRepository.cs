@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using ToDoList.Domain.Entities;
 using ToDoList.Infrastructure.Interfaces;
@@ -16,6 +17,13 @@ public class TaskRepository : ITaskRepository
     public async Task CreateAsync(TaskEntity entity)
     {
         await _applicationContext.Tasks.AddAsync(entity);
+        await _applicationContext.SaveChangesAsync();
+    }
+
+    public async Task CreateUserTaskAsync(TaskEntity entity, string userEmail)
+    {
+        var user = await _applicationContext.Users.FirstOrDefaultAsync(user => user.Email == userEmail);
+        user.Tasks.Add(entity);
         await _applicationContext.SaveChangesAsync();
     }
 
@@ -48,4 +56,12 @@ public class TaskRepository : ITaskRepository
         await _applicationContext.SaveChangesAsync();
     }
 
+    public async Task UpdateUserTaskAsync(TaskEntity entity, string userEmail)
+    {
+        var user = await _applicationContext.Users.FirstOrDefaultAsync(user => user.Email == userEmail);
+        var task = user.Tasks.FirstOrDefault(task => task.Id == entity.Id);
+        user.Tasks.Remove(task);
+        user.Tasks.Add(entity);
+        await _applicationContext.SaveChangesAsync();
+    }
 }
