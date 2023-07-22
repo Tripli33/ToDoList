@@ -19,7 +19,8 @@ builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 
 var connectionString = builder.Configuration.GetConnectionString("MySQL");
-builder.Services.AddDbContext<ApplicationContext>(options => {
+builder.Services.AddDbContext<ApplicationContext>(options =>
+{
     options.UseMySql(connectionString,
     new MySqlServerVersion(new Version(8, 0, 33)));
 });

@@ -23,11 +23,13 @@ public class TaskController : Controller
         var allTasks = _taskRepository.GetAllTasks();
         return View(allTasks);
     }
-    public async Task<ActionResult> UpdateTask(long taskId){
+    public async Task<ActionResult> UpdateTask(long taskId)
+    {
         var task = await _taskRepository.SelectAsync(taskId);
         return View("TaskForm", task);
     }
-    public async Task<IActionResult> DeleteTask(long taskId){
+    public async Task<IActionResult> DeleteTask(long taskId)
+    {
         await _taskRepository.DeleteByIdAsync(taskId);
         return RedirectToAction("Index");
     }
@@ -50,13 +52,16 @@ public class TaskController : Controller
     public async Task<IActionResult> TaskForm(TaskEntity task)
     {
         var userEmail = User.Identity.Name;
-        if (!ModelState.IsValid){
+        if (!ModelState.IsValid)
+        {
             return View();
         }
-        if (task.Id != 0){
+        if (task.Id != 0)
+        {
             await _taskRepository.UpdateUserTaskAsync(task, userEmail);
         }
-        else{
+        else
+        {
             await _taskRepository.CreateUserTaskAsync(task, userEmail);
         }
         return RedirectToAction("Index");
