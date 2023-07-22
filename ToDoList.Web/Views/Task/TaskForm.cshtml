@@ -2,12 +2,17 @@
 @{
     ViewData["Title"] = "Task Form";
 }
+<div>
+    <partial name="_AuthentificationPanel" />
+</div>
 <h1>ADD TASK</h1>
 <form asp-action="TaskForm" method="post">
+    <div asp-validation-summary="ModelOnly"></div>
     <div>
         @if (Model != null)
         {
             <input type="hidden" asp-for="Id"/>
+            <input type="hidden" asp-for="UserId"/>
         }
     </div>
     <div>

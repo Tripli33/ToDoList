@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using ToDoList.Infrastructure.Interfaces;
 using ToDoList.Domain.Enums;
 using ToDoList.Service.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using ToDoList.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ToDoList.Web.Controllers;
 [Authorize]
@@ -49,14 +49,15 @@ public class TaskController : Controller
     [HttpPost]
     public async Task<IActionResult> TaskForm(TaskEntity task)
     {
+        var userEmail = User.Identity.Name;
         if (!ModelState.IsValid){
             return View();
         }
         if (task.Id != 0){
-            await _taskRepository.UpdateAsync(task);
+            await _taskRepository.UpdateUserTaskAsync(task, userEmail);
         }
         else{
-            await _taskRepository.CreateAsync(task);
+            await _taskRepository.CreateUserTaskAsync(task, userEmail);
         }
         return RedirectToAction("Index");
     }
