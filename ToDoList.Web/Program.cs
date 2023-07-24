@@ -39,6 +39,9 @@ app.UseAuthorization();
 //     name: "authPath",
 //     pattern: "{controller=Task}/{action=Index}/{id?}"
 // )));
+app.MapControllerRoute("pagination",
+"Tasks/Page{taskPage}",
+new {Controller = "Task", action = "Index", taskPage = 1});
 app.MapDefaultControllerRoute();
 
 app.Run();

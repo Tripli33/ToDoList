@@ -4,6 +4,7 @@ using ToDoList.Domain.Enums;
 using ToDoList.Service.Interfaces;
 using ToDoList.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
+using ToDoList.Domain.ViewModels;
 
 namespace ToDoList.Web.Controllers;
 [Authorize]
@@ -11,17 +12,26 @@ public class TaskController : Controller
 {
     private readonly ITaskRepository _taskRepository;
     private readonly ITaskService _taskService;
+    public int pageSize = 10;
 
     public TaskController(ITaskRepository taskRepository, ITaskService taskService)
     {
         _taskRepository = taskRepository;
         _taskService = taskService;
     }
-
-    public IActionResult Index()
+    public IActionResult Index(int taskPage = 1)
     {
         var allTasks = _taskRepository.GetAllTasks();
-        return View(allTasks);
+        return View(new TaskListViewModel(){
+            Tasks = allTasks
+            .Skip((taskPage - 1) * pageSize)
+            .Take(pageSize),
+            PagingInfo = new PagingInfo(){
+                TotalItems = allTasks.Count(),
+                ItemsPerPage = pageSize,
+                CurrentPage = taskPage
+            }
+        });
     }
     public async Task<ActionResult> UpdateTask(long taskId)
     {
