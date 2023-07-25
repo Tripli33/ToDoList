@@ -6,8 +6,8 @@ namespace ToDoList.Domain.Entities;
 public class User
 {
     public long UserId { get; set; }
-    [Display(Name = "User name")]
-    [Required(ErrorMessage = "The User name is required")]
+    [Display(Name = "Username")]
+    [Required(ErrorMessage = "The Username is required")]
     [StringLength(20)]
     public string UserName { get; set; } = String.Empty;
     [Required(ErrorMessage = "The Email is required")]
