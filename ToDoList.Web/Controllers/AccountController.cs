@@ -2,8 +2,11 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ToDoList.Domain.Entities;
 using ToDoList.Domain.ViewModels;
+using ToDoList.Infrastructure;
+using ToDoList.Infrastructure.Interfaces;
 using ToDoList.Service.Interfaces;
 
 namespace ToDoList.Web.Controllers;
@@ -11,10 +14,13 @@ namespace ToDoList.Web.Controllers;
 public class AccountController : Controller
 {
     private readonly IAccountService _accountService;
-
-    public AccountController(IAccountService accountService)
+    private readonly ApplicationContext _applicationContext;
+    private readonly IUserRepository _userRepository;
+    public AccountController(IAccountService accountService, ApplicationContext applicationContext, IUserRepository userRepository)
     {
         _accountService = accountService;
+        _applicationContext = applicationContext;
+        _userRepository = userRepository;
     }
 
     public ViewResult Login() => View();
@@ -44,5 +50,29 @@ public class AccountController : Controller
         var claimsPrincipal = await _accountService.CreateUserWithClaimsPrincipal(user, claims, "Cookies");
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
         return Redirect(returnUrl ?? "/Task/Index");
+    }
+    public ViewResult Profile(){
+        var user = _applicationContext.Users.FirstOrDefault(user => user.Email == User.Identity.Name);
+        return View(new UserProfileViewModel() {UserName = user.UserName});
+    }
+    public async Task<IActionResult> ChangeUserName(string userName){
+        var user = await _applicationContext.Users.FirstOrDefaultAsync(user => user.Email == User.Identity.Name);
+        user.UserName = userName;
+        await _userRepository.UpdateAsync(user);
+        return RedirectToAction("Profile");
+    }
+    public async Task<IActionResult> UpdatePassword(UserPasswordViewModel userPasswordViewModel){
+        var user = await _applicationContext.Users.FirstOrDefaultAsync(user => user.Email == User.Identity.Name);
+        user.Password = userPasswordViewModel.NewPassword;
+        user.ConfirmPassword = userPasswordViewModel.ConfirmNewPassword;
+        await _userRepository.UpdateAsync(user);
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToAction("Login");
+    }
+    public async Task<IActionResult> DeleteAccount(){
+        var user = await _applicationContext.Users.FirstOrDefaultAsync(user => user.Email == User.Identity.Name);
+        await _userRepository.DeleteByIdAsync(user.UserId);
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToAction("Login");
     }
 }
