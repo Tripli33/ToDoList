@@ -3,7 +3,9 @@
 }
 <div>
     <partial name="_AuthentificationPanel" />
-    <button><a asp-controller="Task" asp-action="Index">tasks</a></button>
+    @if (User.Identity.IsAuthenticated){
+        <button><a asp-controller="Task" asp-action="Index">tasks</a></button>
+    }
 </div>
 <div>
     <h1>Welcome to ToDoList app!</h1>

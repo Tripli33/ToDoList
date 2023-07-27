@@ -4,6 +4,7 @@
         <label asp-for="UserName"></label>
         <input asp-for="UserName" value=@Model.UserName>
         <button type="submit">Change username</button>
+        <span asp-validation-for="UserName"></span>
     </form>
     <p>User email: @User.Identity.Name</p>
 </div>

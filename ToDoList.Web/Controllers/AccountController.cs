@@ -27,7 +27,9 @@ public class AccountController : Controller
     [HttpPost]
     public async Task<IActionResult> Login(string? returnUrl, UserViewModel userViewModel)
     {
-        if (await _accountService.VerifyUser(userViewModel)) Unauthorized();
+        if (await _accountService.VerifyUser(userViewModel)){
+            return Unauthorized();
+        }
         var claims = new List<Claim> { new Claim(ClaimTypes.Name, userViewModel!.Email) };
         var claimsPrincipal = _accountService.CreateClaimsPrincipal(claims, "Cookies");
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
@@ -75,4 +77,15 @@ public class AccountController : Controller
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToAction("Login");
     }
+    [AcceptVerbs("Post", "Get")]
+    public async Task<IActionResult> CheckUserName(string userName){
+        var user = await _applicationContext.Users.FirstOrDefaultAsync(user => user.UserName == userName);
+        return user is not null ? Json(false) : Json(true);
+    }
+    [AcceptVerbs("Post", "Get")]
+    public async Task<IActionResult> CheckEmail(string email){
+        var user = await _applicationContext.Users.FirstOrDefaultAsync(user => user.Email == email);
+        return user is not null ? Json(false) : Json(true);
+    }
+
 }
