@@ -11,6 +11,7 @@ public class User
     [Display(Name = "Username")]
     [Required(ErrorMessage = "The Username is required")]
     [StringLength(20)]
+    [MinLength(3, ErrorMessage = "The min length of username is 3")]
     [Remote("CheckUserName", "Account", ErrorMessage = "This username already is use")]
     public string UserName { get; set; } = String.Empty;
     [Required(ErrorMessage = "The Email is required")]

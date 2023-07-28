@@ -14,20 +14,17 @@ namespace ToDoList.Web.Controllers;
 public class AccountController : Controller
 {
     private readonly IAccountService _accountService;
-    private readonly ApplicationContext _applicationContext;
-    private readonly IUserRepository _userRepository;
-    public AccountController(IAccountService accountService, ApplicationContext applicationContext, IUserRepository userRepository)
+
+    public AccountController(IAccountService accountService)
     {
         _accountService = accountService;
-        _applicationContext = applicationContext;
-        _userRepository = userRepository;
     }
 
     public ViewResult Login() => View();
     [HttpPost]
     public async Task<IActionResult> Login(string? returnUrl, UserViewModel userViewModel)
     {
-        if (await _accountService.VerifyUser(userViewModel)){
+        if (await _accountService.VerifyUserViewModelAsync(userViewModel)){
             return Unauthorized();
         }
         var claims = new List<Claim> { new Claim(ClaimTypes.Name, userViewModel!.Email) };
@@ -53,39 +50,49 @@ public class AccountController : Controller
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
         return Redirect(returnUrl ?? "/Task/Index");
     }
-    public ViewResult Profile(){
-        var user = _applicationContext.Users.FirstOrDefault(user => user.Email == User.Identity.Name);
+    public async Task<ViewResult> Profile(){
+        var email = User.Identity.Name;
+        var user = await _accountService.GetUserByEmailAsync(email);
         return View(new UserProfileViewModel() {UserName = user.UserName});
     }
     public async Task<IActionResult> ChangeUserName(string userName){
-        var user = await _applicationContext.Users.FirstOrDefaultAsync(user => user.Email == User.Identity.Name);
-        user.UserName = userName;
-        await _userRepository.UpdateAsync(user);
+        if (!ModelState.IsValid)
+        {
+            return View("Profile");
+        }
+        var email = User.Identity.Name;
+        await _accountService.UpdateUserNameByUserEmailAsync(email, userName);
         return RedirectToAction("Profile");
     }
     public async Task<IActionResult> UpdatePassword(UserPasswordViewModel userPasswordViewModel){
-        var user = await _applicationContext.Users.FirstOrDefaultAsync(user => user.Email == User.Identity.Name);
-        user.Password = userPasswordViewModel.NewPassword;
-        user.ConfirmPassword = userPasswordViewModel.ConfirmNewPassword;
-        await _userRepository.UpdateAsync(user);
+        if (!ModelState.IsValid)
+        {
+            return View("Profile");
+        }
+        var email = User.Identity.Name;
+        await _accountService.UpdateUserPasswordByUserEmailAsync(email, userPasswordViewModel.NewPassword);
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToAction("Login");
     }
     public async Task<IActionResult> DeleteAccount(){
-        var user = await _applicationContext.Users.FirstOrDefaultAsync(user => user.Email == User.Identity.Name);
-        await _userRepository.DeleteByIdAsync(user.UserId);
+        var email = User.Identity.Name;
+        await _accountService.DeleteUserByUserEmailAsync(email);
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToAction("Login");
     }
     [AcceptVerbs("Post", "Get")]
-    public async Task<IActionResult> CheckUserName(string userName){
-        var user = await _applicationContext.Users.FirstOrDefaultAsync(user => user.UserName == userName);
-        return user is not null ? Json(false) : Json(true);
+    public async Task<bool> CheckUserName(string userName){
+        var user = await _accountService.GetUserByUserNameAsync(userName);
+        return user is null;
     }
     [AcceptVerbs("Post", "Get")]
-    public async Task<IActionResult> CheckEmail(string email){
-        var user = await _applicationContext.Users.FirstOrDefaultAsync(user => user.Email == email);
-        return user is not null ? Json(false) : Json(true);
+    public async Task<bool> CheckEmail(string email){
+        var user = await _accountService.GetUserByEmailAsync(email);
+        return user is null;
     }
-
+    [AcceptVerbs("Post", "Get")]
+    public async Task<bool> CheckOldPassword(string oldPassword){
+        var email = User.Identity.Name;
+        return !await _accountService.VerifyUserViewModelAsync(new UserViewModel() {Email = email, Password = oldPassword});
+    }
 }

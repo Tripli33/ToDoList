@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ToDoList.Domain.ViewModels;
 
@@ -7,6 +8,7 @@ public class UserPasswordViewModel
     [Display(Name = "Old password")]
     [MinLength(4, ErrorMessage = "The min length of password is 4")]
     [DataType(DataType.Password)]
+    [Remote("CheckOldPassword", "Account", ErrorMessage = "Old password is incorrect")]
     public string OldPassword { get; set; } = string.Empty;
     [Display(Name = "New password")]
     [MinLength(4, ErrorMessage = "The min length of password is 4")]

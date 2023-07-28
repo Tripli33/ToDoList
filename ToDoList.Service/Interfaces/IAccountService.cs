@@ -8,5 +8,12 @@ public interface IAccountService
 {
     ClaimsPrincipal CreateClaimsPrincipal(List<Claim> claims, string authenticationType);
     Task<ClaimsPrincipal> CreateUserWithClaimsPrincipal(User user, List<Claim> claims, string authenticationType);
-    Task<bool> VerifyUser(UserViewModel userViewModel);
+    Task<bool> VerifyUserViewModelAsync(UserViewModel userViewModel);
+    Task<User> GetUserByUserNameAsync(string userName);
+    Task<User> GetUserByEmailAsync(string email);
+    Task UpdateUserNameAsync(User user, string userName);
+    Task UpdateUserPasswordAsync(User user, string newPassword);
+    Task UpdateUserNameByUserEmailAsync(string email, string userName);
+    Task UpdateUserPasswordByUserEmailAsync(string email, string newPassword);
+    Task DeleteUserByUserEmailAsync(string email);
 }
