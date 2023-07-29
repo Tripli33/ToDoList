@@ -34,7 +34,7 @@ public class AccountService : IAccountService
 
     public async Task<bool> VerifyUserViewModelAsync(UserViewModel userViewModel)
     {
-        var user = await GetUserByEmailAsync(userViewModel.Email);
+        var user = await GetUserByEmailOrUserNameAsync(userViewModel.EmailOrUserName);
         return user is null || user.Password != userViewModel.Password;
     }
 
@@ -78,6 +78,12 @@ public class AccountService : IAccountService
     public async Task<User> GetUserByUserNameAsync(string userName)
     {
         var user = await _applicationContext.Users.FirstOrDefaultAsync(user => user.UserName == userName);
+        return user;
+    }
+
+    public async Task<User> GetUserByEmailOrUserNameAsync(string emailOrUserName)
+    {
+        var user = await _applicationContext.Users.FirstOrDefaultAsync(user => user.UserName == emailOrUserName || user.Email == emailOrUserName);
         return user;
     }
 }

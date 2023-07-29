@@ -5,9 +5,10 @@
 <h1>LOGIN</h1>
 <form asp-action="Login" method="post">
     <div>
-        <label asp-for="Email">Email:</label>
-        <input asp-for="Email"/>
-        <span asp-validation-for="Email"></span>
+        <label asp-for="EmailOrUserName">Login:</label>
+        <input asp-for="EmailOrUserName"/>
+        <span asp-validation-for="EmailOrUserName"></span>
+        <p><i>(Email or password)</i></p>
     </div>
     <div>
         <label asp-for="Password">Password:</label>

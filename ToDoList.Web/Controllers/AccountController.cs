@@ -27,7 +27,13 @@ public class AccountController : Controller
         if (await _accountService.VerifyUserViewModelAsync(userViewModel)){
             return Unauthorized();
         }
-        var claims = new List<Claim> { new Claim(ClaimTypes.Name, userViewModel!.Email) };
+
+        if (!userViewModel.EmailOrUserName.Contains('@')){
+            var user = await _accountService.GetUserByUserNameAsync(userViewModel.EmailOrUserName);
+            userViewModel.EmailOrUserName = user.Email;
+        }
+
+        var claims = new List<Claim> { new Claim(ClaimTypes.Name, userViewModel.EmailOrUserName) };
         var claimsPrincipal = _accountService.CreateClaimsPrincipal(claims, "Cookies");
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
         return Redirect(returnUrl ?? "/Task/Index");
@@ -93,6 +99,6 @@ public class AccountController : Controller
     [AcceptVerbs("Post", "Get")]
     public async Task<bool> CheckOldPassword(string oldPassword){
         var email = User.Identity.Name;
-        return !await _accountService.VerifyUserViewModelAsync(new UserViewModel() {Email = email, Password = oldPassword});
+        return !await _accountService.VerifyUserViewModelAsync(new UserViewModel() {EmailOrUserName = email, Password = oldPassword});
     }
 }

@@ -11,6 +11,7 @@ public interface IAccountService
     Task<bool> VerifyUserViewModelAsync(UserViewModel userViewModel);
     Task<User> GetUserByUserNameAsync(string userName);
     Task<User> GetUserByEmailAsync(string email);
+    Task<User> GetUserByEmailOrUserNameAsync(string emailOrUserName);
     Task UpdateUserNameAsync(User user, string userName);
     Task UpdateUserPasswordAsync(User user, string newPassword);
     Task UpdateUserNameByUserEmailAsync(string email, string userName);
