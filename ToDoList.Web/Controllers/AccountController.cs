@@ -97,8 +97,8 @@ public class AccountController : Controller
         return user is null;
     }
     [AcceptVerbs("Post", "Get")]
-    public async Task<bool> CheckOldPassword(string oldPassword){
+    public async Task<bool> CheckOldPassword(UserPasswordViewModel userPasswordViewModel){
         var email = User.Identity.Name;
-        return !await _accountService.VerifyUserViewModelAsync(new UserViewModel() {EmailOrUserName = email, Password = oldPassword});
+        return !await _accountService.VerifyUserViewModelAsync(new UserViewModel() {EmailOrUserName = email, Password = userPasswordViewModel.OldPassword});
     }
 }
