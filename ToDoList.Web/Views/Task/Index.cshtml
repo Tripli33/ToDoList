@@ -12,11 +12,19 @@
 <table>
     <thead>
         <tr>
-            <th>Title</th>
+            <th>
+                <sort-header action="Index" property="@Model.TaskSortHeaderViewModel.TitleSort"></sort-header>
+            </th>
             <th>Description</th>
-            <th>Dead line</th>
-            <th>Priority</th>
-            <th>Status</th>
+            <th>
+                <sort-header action="Index" property="@Model.TaskSortHeaderViewModel.DeadLineSort"></sort-header>
+            </th>
+            <th>
+                <sort-header action="Index" property="@Model.TaskSortHeaderViewModel.PrioritySort"></sort-header>
+            </th>
+            <th>
+                <sort-header action="Index" property="@Model.TaskSortHeaderViewModel.StatusSort"></sort-header>
+            </th>
             <th></th>
             <th></th>
             <th></th>
