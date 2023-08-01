@@ -2,10 +2,8 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using ToDoList.Domain.Entities;
 using ToDoList.Domain.ViewModels;
-using ToDoList.Infrastructure;
 using ToDoList.Infrastructure.Interfaces;
 using ToDoList.Service.Interfaces;
 
@@ -13,27 +11,29 @@ namespace ToDoList.Web.Controllers;
 
 public class AccountController : Controller
 {
+    private readonly IUserRepository _userRepository;
     private readonly IAccountService _accountService;
 
-    public AccountController(IAccountService accountService)
+    public AccountController(IUserRepository userRepository, IAccountService accountService)
     {
+        _userRepository = userRepository;
         _accountService = accountService;
     }
 
     public ViewResult Login() => View();
     [HttpPost]
-    public async Task<IActionResult> Login(string? returnUrl, UserViewModel userViewModel)
+    public async Task<IActionResult> Login(string? returnUrl, UserLoginViewModel userLoginViewModel)
     {
-        if (await _accountService.VerifyUserViewModelAsync(userViewModel)){
+        if (await _accountService.VerifyUserLoginViewModelAsync(userLoginViewModel)){
             return Unauthorized();
         }
 
-        if (!userViewModel.EmailOrUserName.Contains('@')){
-            var user = await _accountService.GetUserByUserNameAsync(userViewModel.EmailOrUserName);
-            userViewModel.EmailOrUserName = user.Email;
+        if (!userLoginViewModel.EmailOrUserName.Contains('@')){
+            var user = await _userRepository.GetUserByUserNameAsync(userLoginViewModel.EmailOrUserName);
+            userLoginViewModel.EmailOrUserName = user.Email;
         }
 
-        var claims = new List<Claim> { new Claim(ClaimTypes.Name, userViewModel.EmailOrUserName) };
+        var claims = new List<Claim> { new Claim(ClaimTypes.Name, userLoginViewModel.EmailOrUserName) };
         var claimsPrincipal = _accountService.CreateClaimsPrincipal(claims, "Cookies");
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
         return Redirect(returnUrl ?? "/Task/Index");
@@ -52,13 +52,13 @@ public class AccountController : Controller
             return View();
         }
         var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Email) };
-        var claimsPrincipal = await _accountService.CreateUserWithClaimsPrincipal(user, claims, "Cookies");
+        var claimsPrincipal = await _accountService.CreateUserWithClaimsPrincipalAsync(user, claims, "Cookies");
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
         return Redirect(returnUrl ?? "/Task/Index");
     }
     public async Task<ViewResult> Profile(){
-        var email = User.Identity.Name;
-        var user = await _accountService.GetUserByEmailAsync(email);
+        var email = User.Identity?.Name ?? String.Empty;
+        var user = await _userRepository.GetUserByEmailAsync(email);
         return View(new UserProfileViewModel() {UserName = user.UserName});
     }
     public async Task<IActionResult> ChangeUserName(string userName){
@@ -66,8 +66,8 @@ public class AccountController : Controller
         {
             return View("Profile");
         }
-        var email = User.Identity.Name;
-        await _accountService.UpdateUserNameByUserEmailAsync(email, userName);
+        var email = User.Identity?.Name ?? String.Empty;
+        await _accountService.UpdateUserNameByEmailAsync(email, userName);
         return RedirectToAction("Profile");
     }
     public async Task<IActionResult> UpdatePassword(UserPasswordViewModel userPasswordViewModel){
@@ -75,30 +75,31 @@ public class AccountController : Controller
         {
             return View("Profile");
         }
-        var email = User.Identity.Name;
-        await _accountService.UpdateUserPasswordByUserEmailAsync(email, userPasswordViewModel.NewPassword);
+        var email = User.Identity?.Name ?? String.Empty;
+        await _accountService.UpdateUserPasswordByEmailAsync(email, userPasswordViewModel.NewPassword);
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToAction("Login");
     }
     public async Task<IActionResult> DeleteAccount(){
-        var email = User.Identity.Name;
-        await _accountService.DeleteUserByUserEmailAsync(email);
+        var email = User.Identity?.Name ?? String.Empty;
+        await _accountService.DeleteUserByEmailAsync(email);
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToAction("Login");
     }
     [AcceptVerbs("Post", "Get")]
     public async Task<bool> CheckUserName(string userName){
-        var user = await _accountService.GetUserByUserNameAsync(userName);
+        var user = await _userRepository.GetUserByUserNameAsync(userName);
         return user is null;
     }
     [AcceptVerbs("Post", "Get")]
     public async Task<bool> CheckEmail(string email){
-        var user = await _accountService.GetUserByEmailAsync(email);
+        var user = await _userRepository.GetUserByEmailAsync(email);
         return user is null;
     }
     [AcceptVerbs("Post", "Get")]
     public async Task<bool> CheckOldPassword(UserPasswordViewModel userPasswordViewModel){
-        var email = User.Identity.Name;
-        return !await _accountService.VerifyUserViewModelAsync(new UserViewModel() {EmailOrUserName = email, Password = userPasswordViewModel.OldPassword});
+        var email = User.Identity?.Name ?? String.Empty;
+        return !await _accountService.VerifyUserLoginViewModelAsync(new UserLoginViewModel()
+        {EmailOrUserName = email, Password = userPasswordViewModel.OldPassword});
     }
 }

@@ -63,7 +63,7 @@ public class TaskController : Controller
     [HttpPost]
     public async Task<IActionResult> TaskForm(TaskEntity task)
     {
-        var userEmail = User.Identity.Name;
+        var userEmail = User.Identity?.Name ?? String.Empty;
         if (!ModelState.IsValid)
         {
             return View();

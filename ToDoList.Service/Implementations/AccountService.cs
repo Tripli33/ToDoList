@@ -12,15 +12,13 @@ namespace ToDoList.Service.Implementations;
 public class AccountService : IAccountService
 {
     private readonly IUserRepository _userRepository;
-    private readonly ApplicationContext _applicationContext;
 
-    public AccountService(ApplicationContext applicationContext, IUserRepository userRepository)
+    public AccountService(IUserRepository userRepository)
     {
         _userRepository = userRepository;
-        _applicationContext = applicationContext;
     }
 
-    public async Task<ClaimsPrincipal> CreateUserWithClaimsPrincipal(User user, List<Claim> claims, string authenticationType)
+    public async Task<ClaimsPrincipal> CreateUserWithClaimsPrincipalAsync(User user, List<Claim> claims, string authenticationType)
     {
         await _userRepository.CreateAsync(user);
         var claimsIdentity = new ClaimsIdentity(claims, authenticationType);
@@ -32,16 +30,10 @@ public class AccountService : IAccountService
         return new ClaimsPrincipal(claimsIdentity);
     }
 
-    public async Task<bool> VerifyUserViewModelAsync(UserViewModel userViewModel)
+    public async Task<bool> VerifyUserLoginViewModelAsync(UserLoginViewModel userLoginViewModel)
     {
-        var user = await GetUserByEmailOrUserNameAsync(userViewModel.EmailOrUserName);
-        return user is null || user.Password != userViewModel.Password;
-    }
-
-    public async Task<User> GetUserByEmailAsync(string email)
-    {
-        var user = await _applicationContext.Users.FirstOrDefaultAsync(user => user.Email == email);
-        return user;
+        var user = await _userRepository.GetUserByEmailOrUserNameAsync(userLoginViewModel.EmailOrUserName);
+        return user is null || user.Password != userLoginViewModel.Password;
     }
 
     public async Task UpdateUserPasswordAsync(User user, string newPassword)
@@ -51,15 +43,15 @@ public class AccountService : IAccountService
         await _userRepository.UpdateAsync(user);
     }
 
-    public async Task UpdateUserPasswordByUserEmailAsync(string email, string newPassword)
+    public async Task UpdateUserPasswordByEmailAsync(string email, string newPassword)
     {
-        var user = await GetUserByEmailAsync(email);
+        var user = await _userRepository.GetUserByEmailAsync(email);
         await UpdateUserPasswordAsync(user, newPassword);
     }
 
-    public async Task DeleteUserByUserEmailAsync(string email)
+    public async Task DeleteUserByEmailAsync(string email)
     {
-        var user = await GetUserByEmailAsync(email);
+        var user = await _userRepository.GetUserByEmailAsync(email);
         await _userRepository.DeleteAsync(user);
     }
 
@@ -69,21 +61,9 @@ public class AccountService : IAccountService
         await _userRepository.UpdateAsync(user);
     }
 
-    public async Task UpdateUserNameByUserEmailAsync(string email, string userName)
+    public async Task UpdateUserNameByEmailAsync(string email, string userName)
     {
-        var user = await GetUserByEmailAsync(email);
+        var user = await _userRepository.GetUserByEmailAsync(email);
         await UpdateUserNameAsync(user, userName);
-    }
-
-    public async Task<User> GetUserByUserNameAsync(string userName)
-    {
-        var user = await _applicationContext.Users.FirstOrDefaultAsync(user => user.UserName == userName);
-        return user;
-    }
-
-    public async Task<User> GetUserByEmailOrUserNameAsync(string emailOrUserName)
-    {
-        var user = await _applicationContext.Users.FirstOrDefaultAsync(user => user.UserName == emailOrUserName || user.Email == emailOrUserName);
-        return user;
     }
 }

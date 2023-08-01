@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ToDoList.Domain.ViewModels;
 
-public class UserViewModel
+public class UserLoginViewModel
 {
     [Required(ErrorMessage = "Email or username is required")]
     public string EmailOrUserName { get; set; } = String.Empty;

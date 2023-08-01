@@ -47,7 +47,8 @@ public class TaskRepository : ITaskRepository
 
     public async Task<TaskEntity> SelectAsync(long entityId)
     {
-        return await _applicationContext.Tasks.FindAsync(entityId);
+        var task = await _applicationContext.Tasks.FindAsync(entityId);
+        return task;
     }
 
     public async Task UpdateAsync(TaskEntity entity)
