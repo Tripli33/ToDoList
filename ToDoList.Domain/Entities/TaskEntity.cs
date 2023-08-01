@@ -6,12 +6,12 @@ namespace ToDoList.Domain.Entities;
 public class TaskEntity
 {
     public long Id { get; set; }
-    [Required(ErrorMessage = "The Title is required")]
+    [Required(ErrorMessage = "The title is required")]
     [StringLength(30)]
     public string Title { get; set; } = string.Empty;
     public string? Description { get; set; }
-    [Required(ErrorMessage = "The Dead line is required")]
-    [FutureDate(ErrorMessage = "The Dead line cannot be a past date")]
+    [Required(ErrorMessage = "The deadline is required")]
+    [FutureDate(ErrorMessage = "The deadline cannot be a past date")]
     public DateTime DeadLine { get; set; }
     public Priority Priority { get; set; }
     public Status Status { get; set; }
