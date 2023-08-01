@@ -22,21 +22,12 @@ public class TaskController : Controller
     public IActionResult Index(SortState sortOrder = SortState.DeadLineAsc, int taskPage = 1)
     {
         var allTasks = _taskRepository.GetAllTasks();
-        allTasks = sortOrder switch{
-            SortState.TitleAsc => allTasks.OrderBy(task => task.Title),
-            SortState.TitleDesc => allTasks.OrderByDescending(task => task.Title),
-            SortState.DeadLineAsc => allTasks.OrderBy(task => task.DeadLine),
-            SortState.DeadLineDesc => allTasks.OrderByDescending(task => task.DeadLine),
-            SortState.PriorityAsc => allTasks.OrderBy(task => task.Priority),
-            SortState.PriorityDesc => allTasks.OrderByDescending(task => task.Priority),
-            SortState.StatusAsc => allTasks.OrderBy(task => task.Status),
-            _ => allTasks.OrderByDescending(task => task.Status)
-        };
+        allTasks = _taskService.SortTaskBySortStateCategory(allTasks, sortOrder);
         return View(new TaskListViewModel(){
             Tasks = allTasks
             .Skip((taskPage - 1) * pageSize)
             .Take(pageSize),
-            TaskSortHeaderViewModel = new TaskSortHeaderViewModel(sortOrder),
+            TaskSortHeaderInfo = new TaskSortHeaderInfo(sortOrder),
             PagingInfo = new PagingInfo(){
                 TotalItems = allTasks.Count(),
                 ItemsPerPage = pageSize,

@@ -1,17 +1,24 @@
 using System.Data.SqlTypes;
 using ToDoList.Domain.Enums;
 
-namespace ToDoList.Domain.ViewModels;
+namespace ToDoList.Domain.Entities;
 
-public class TaskSortHeaderViewModel
+public class TaskSortHeaderInfo
 {
     public SortState TitleSort { get; set; }
     public SortState DeadLineSort { get; set; }
     public SortState PrioritySort { get; set; }
     public SortState StatusSort { get; set; }
     public SortState Current { get; set; }
+    public TaskSortHeaderInfo()
+    {
+        TitleSort = SortState.TitleAsc;
+        DeadLineSort = SortState.DeadLineAsc;
+        PrioritySort = SortState.PriorityAsc;
+        StatusSort = SortState.StatusAsc;
+    }
 
-    public TaskSortHeaderViewModel(SortState sortOrder)
+    public TaskSortHeaderInfo(SortState sortOrder)
     {
         TitleSort = SortState.TitleAsc;
         DeadLineSort = SortState.DeadLineAsc;

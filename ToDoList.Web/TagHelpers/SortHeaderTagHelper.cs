@@ -15,18 +15,19 @@ public class SortHeaderTagHelper : TagHelper
     {
         _urlHelperFactory = urlHelperFactory;
     }
-    public SortState Property { get; set; }
 
     [ViewContext]
     [HtmlAttributeNotBound]
     public ViewContext ViewContext { get; set; } = null!;
     public string? PageAction { get; set; }
+    public SortState Property { get; set; }
+    public string PropertyName { get; set; } = String.Empty;
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
         IUrlHelper urlHelper = _urlHelperFactory.GetUrlHelper(ViewContext);
         TagBuilder tag = new("a");
         tag.Attributes["href"] = urlHelper.Action(PageAction, new {sortOrder = Property});
-        tag.InnerHtml.Append(Property.ToString());
+        tag.InnerHtml.Append(PropertyName);
         output.Content.AppendHtml(tag);
     }
 }
