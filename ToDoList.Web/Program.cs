@@ -1,3 +1,4 @@
+using System.Buffers;
 using ToDoList.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using ToDoList.Infrastructure.Interfaces;
@@ -11,7 +12,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 
 builder.Services.AddAuthorization();
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => options.LoginPath = "/Account/Login");
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+.AddCookie(options => {
+    options.LoginPath = "/Account/Login";
+    options.ExpireTimeSpan = TimeSpan.FromHours(1);
+    });
 
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
