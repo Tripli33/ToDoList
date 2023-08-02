@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddRazorPages();
+
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => options.LoginPath = "/Account/Login");
 
@@ -27,6 +29,15 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
 
 var app = builder.Build();
 
+// app.Environment.EnvironmentName = "Production";
+
+if(!app.Environment.IsDevelopment()){
+    app.UseExceptionHandler("/Error");
+}
+else{
+    app.UseDeveloperExceptionPage();
+}
+
 app.UseStaticFiles();
 
 app.UseRouting();
@@ -43,5 +54,5 @@ app.MapControllerRoute("pagination",
 "Tasks/Page{taskPage}",
 new {Controller = "Task", action = "Index", taskPage = 1});
 app.MapDefaultControllerRoute();
-
+app.MapRazorPages();
 app.Run();
