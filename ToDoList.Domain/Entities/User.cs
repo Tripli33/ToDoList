@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ToDoList.Domain.Enums;
 
 namespace ToDoList.Domain.Entities;
 [Index(nameof(UserName), IsUnique = true)]
@@ -29,5 +30,6 @@ public class User
     [DataType(DataType.Password)]
     [Compare("Password")]
     public string ConfirmPassword { get; set; } = String.Empty;
+    public Role Role { get; set; } = Role.User;
     public ICollection<TaskEntity> Tasks { get; set; } = new List<TaskEntity>();
 }

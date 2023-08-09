@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.Entities;
 using ToDoList.Domain.ViewModels;
@@ -28,12 +29,11 @@ public class AccountController : Controller
             return Unauthorized();
         }
 
-        if (!userLoginViewModel.EmailOrUserName.Contains('@')){
-            var user = await _userRepository.GetUserByUserNameAsync(userLoginViewModel.EmailOrUserName);
-            userLoginViewModel.EmailOrUserName = user.Email;
-        }
+        var user = await _userRepository.GetUserByEmailOrUserNameAsync(userLoginViewModel.EmailOrUserName);
 
-        var claims = new List<Claim> { new Claim(ClaimTypes.Name, userLoginViewModel.EmailOrUserName) };
+        var claims = new List<Claim> { 
+            new Claim(ClaimTypes.Name, user.Email),
+            new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.ToString()) };
         var claimsPrincipal = _accountService.CreateClaimsPrincipal(claims, "Cookies");
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
         return Redirect(returnUrl ?? "/Task/Index");
@@ -51,7 +51,9 @@ public class AccountController : Controller
         {
             return View();
         }
-        var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Email) };
+        var claims = new List<Claim> { 
+            new Claim(ClaimTypes.Name, user.Email),
+            new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.ToString()) };
         var claimsPrincipal = await _accountService.CreateUserWithClaimsPrincipalAsync(user, claims, "Cookies");
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
         return Redirect(returnUrl ?? "/Task/Index");
