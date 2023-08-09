@@ -88,6 +88,12 @@ public class AccountController : Controller
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToAction("Login");
     }
+    [Authorize(Roles = "Admin")]
+    public IActionResult AdminPanel()
+    {
+        var users = _userRepository.GetAllUserWithRoleUser();
+        return View(users);
+    }
     [AcceptVerbs("Post", "Get")]
     public async Task<bool> CheckUserName(string userName){
         var user = await _userRepository.GetUserByUserNameAsync(userName);

@@ -1,4 +1,3 @@
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using ToDoList.Domain.Entities;
 using ToDoList.Infrastructure.Interfaces;

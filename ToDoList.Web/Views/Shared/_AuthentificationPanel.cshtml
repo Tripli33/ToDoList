@@ -1,3 +1,4 @@
+@using System.Security.Claims
 
 <div>
     @if(User.Identity.IsAuthenticated){
@@ -6,6 +7,9 @@
             <form asp-controller="Account" asp-action="Logout">
                 <button type="submit">Logout</button>
             </form>
+            @if("Admin" == Context.User.FindFirstValue(ClaimsIdentity.DefaultRoleClaimType)){
+                <a asp-controller="Account" asp-action="AdminPanel">Admin panel</a>
+            }
         </div>
     }else{
         <div>

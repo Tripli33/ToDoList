@@ -1,6 +1,6 @@
 using ToDoList.Domain.Entities;
+using ToDoList.Domain.Enums;
 using ToDoList.Infrastructure.Interfaces;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace ToDoList.Infrastructure.Repositories;
@@ -31,6 +31,16 @@ public class UserRepository : IUserRepository
         var user = await _applicationContext.Users.FindAsync(entityId);
         _applicationContext.Remove(user);
         await _applicationContext.SaveChangesAsync();
+    }
+
+    public IQueryable<User> GetAllUsers()
+    {
+        return _applicationContext.Users;
+    }
+
+    public IQueryable<User> GetAllUserWithRoleUser()
+    {
+        return _applicationContext.Users.Where(u => u.Role == Role.User);
     }
 
     public async Task<User> GetUserByEmailAsync(string email)

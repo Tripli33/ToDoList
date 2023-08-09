@@ -1,0 +1,19 @@
+@model IQueryable<ToDoList.Domain.Entities.User>
+@{
+    ViewData["Title"] = "Admin panel";
+}
+<h1>Admin panel</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+        </tr>
+    </thead>
+    <tbody>
+         @foreach (var user in Model ?? Enumerable.Empty<User>()){
+            <partial name="_UserSummary" model="user"/>
+         }
+    </tbody>
+</table>
