@@ -7,13 +7,13 @@
     <td>@Model.Status</td>
     <td>
         @if(Model.Status == Status.InProgress){
-            <form asp-action="CloseTask" method="post">
+            <form asp-controller="Task" asp-action="CloseTask" method="post">
                 <input type="hidden" name="taskId" value=@Model.Id>
                 <button type="submit">Close</button>
             </form>
         }
         else if(Model.Status == Status.NotStarted){
-            <form asp-action="StartTask" method="post">
+            <form asp-controller="Task" asp-action="StartTask" method="post">
                 <input type="hidden" name="taskId" value=@Model.Id>
                 <button type="submit">Start</button>
             </form>
@@ -21,14 +21,14 @@
     </td>
     <td>
         @if(Model.Status != Status.Completed){
-            <form asp-action="UpdateTask" method="post">
+            <form asp-controller="Task" asp-action="UpdateTask" method="post">
                 <input type="hidden" name="taskId" value=@Model.Id>
                 <button type="submit">Update</button>
             </form>
         }
     </td>
     <td>
-        <form asp-action="DeleteTask" method="post">
+        <form asp-controller="Task" asp-action="DeleteTask" method="post">
             <input type="hidden" name="taskId" value=@Model.Id>
             <button type="submit">Delete</button>
         </form>

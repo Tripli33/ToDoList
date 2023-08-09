@@ -3,7 +3,7 @@
     ViewData["Title"] = "Login";
 }
 <h1>LOGIN</h1>
-<form asp-action="Login" method="post">
+<form asp-controller="Account" asp-action="Login" method="post">
     <div>
         <label asp-for="EmailOrUserName">Login:</label>
         <input asp-for="EmailOrUserName"/>

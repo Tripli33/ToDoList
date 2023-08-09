@@ -7,23 +7,23 @@
 </div>
 <form>
     <h1>TASK LIST</h1>
-    <button asp-action="TaskForm">Add task</button>
+    <button asp-controller="Task" asp-action="TaskForm">Add task</button>
 </form>
 <table>
     <thead>
         <tr>
             <th>
-                <sort-header action="Index" property="@Model.TaskSortHeaderInfo.TitleSort" property-name="Title"></sort-header>
+                <sort-header page-action="Index" property="@Model.TaskSortHeaderInfo.TitleSort" property-name="Title"></sort-header>
             </th>
             <th>Description</th>
             <th>
-                <sort-header action="Index" property="@Model.TaskSortHeaderInfo.DeadLineSort" property-name="Deadline"></sort-header>
+                <sort-header page-action="Index" property="@Model.TaskSortHeaderInfo.DeadLineSort" property-name="Deadline"></sort-header>
             </th>
             <th>
-                <sort-header action="Index" property="@Model.TaskSortHeaderInfo.PrioritySort" property-name="Property"></sort-header>
+                <sort-header page-action="Index" property="@Model.TaskSortHeaderInfo.PrioritySort" property-name="Property"></sort-header>
             </th>
             <th>
-                <sort-header action="Index" property="@Model.TaskSortHeaderInfo.StatusSort" property-name="Status"></sort-header>
+                <sort-header page-action="Index" property="@Model.TaskSortHeaderInfo.StatusSort" property-name="Status"></sort-header>
             </th>
             <th></th>
             <th></th>
