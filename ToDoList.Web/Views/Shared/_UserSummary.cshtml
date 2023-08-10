@@ -9,4 +9,10 @@
             <button type="submit">Update role</button>
         </form>
     </td>
+    <td>
+        <form asp-controller="Account" asp-action="DeleteUser" method="post">
+            <input type="hidden" name="userId" value=@Model.UserId>
+            <button type="submit">Delete</button>
+        </form>
+    </td>
 </tr>

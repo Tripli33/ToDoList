@@ -99,6 +99,10 @@ public class AccountController : Controller
         await _accountService.UpdateUserRoleAsync(userId, Role.Admin);
         return RedirectToAction("AdminPanel");
     }
+    public async Task<IActionResult> DeleteUser(long userId){
+        await _userRepository.DeleteByIdAsync(userId);
+        return RedirectToAction("AdminPanel");
+    }
     [AcceptVerbs("Post", "Get")]
     public async Task<bool> CheckUserName(string userName){
         var user = await _userRepository.GetUserByUserNameAsync(userName);
