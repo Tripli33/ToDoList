@@ -3,4 +3,10 @@
     <td>@Model.UserName</td>
     <td>@Model.Email</td>
     <td>@Model.Role</td>
+    <td>
+        <form asp-controller="Account" asp-action="UpdateUserRole" method="post">
+            <input type="hidden" name="userId" value=@Model.UserId>
+            <button type="submit">Update role</button>
+        </form>
+    </td>
 </tr>

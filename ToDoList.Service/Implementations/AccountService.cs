@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ToDoList.Domain.Entities;
+using ToDoList.Domain.Enums;
 using ToDoList.Domain.ViewModels;
 using ToDoList.Infrastructure;
 using ToDoList.Infrastructure.Interfaces;
@@ -65,5 +66,12 @@ public class AccountService : IAccountService
     {
         var user = await _userRepository.GetUserByEmailAsync(email);
         await UpdateUserNameAsync(user, userName);
+    }
+
+    public async Task UpdateUserRoleAsync(long userId, Role role)
+    {
+        var user = await _userRepository.SelectAsync(userId);
+        user.Role = role;
+        _userRepository.UpdateAsync(user);
     }
 }

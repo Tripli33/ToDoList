@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.Entities;
+using ToDoList.Domain.Enums;
 using ToDoList.Domain.ViewModels;
 using ToDoList.Infrastructure.Interfaces;
 using ToDoList.Service.Interfaces;
@@ -93,6 +94,10 @@ public class AccountController : Controller
     {
         var users = _userRepository.GetAllUserWithRoleUser();
         return View(users);
+    }
+    public async Task<IActionResult> UpdateUserRole(long userId){
+        await _accountService.UpdateUserRoleAsync(userId, Role.Admin);
+        return RedirectToAction("AdminPanel");
     }
     [AcceptVerbs("Post", "Get")]
     public async Task<bool> CheckUserName(string userName){
