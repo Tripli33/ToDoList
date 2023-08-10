@@ -44,6 +44,12 @@ public class TaskRepository : ITaskRepository
         return _applicationContext.Tasks;
     }
 
+    public IQueryable<TaskEntity> GetUserTasksByEmail(string email)
+    {
+        var tasks = _applicationContext.Tasks.Where(t => t.User.Email == email);
+        return tasks;
+    }
+
     public async Task<TaskEntity> SelectAsync(long entityId)
     {
         var task = await _applicationContext.Tasks.FindAsync(entityId);

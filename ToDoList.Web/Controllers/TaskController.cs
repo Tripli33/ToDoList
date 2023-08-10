@@ -21,7 +21,8 @@ public class TaskController : Controller
     }
     public IActionResult Index(SortState sortOrder = SortState.DeadLineAsc, int taskPage = 1)
     {
-        var allTasks = _taskRepository.GetAllTasks();
+        var email = User.Identity?.Name ?? String.Empty;
+        var allTasks = _taskRepository.GetUserTasksByEmail(email);
         allTasks = _taskService.SortTaskBySortStateCategory(allTasks, sortOrder);
         return View(new TaskListViewModel(){
             Tasks = allTasks
