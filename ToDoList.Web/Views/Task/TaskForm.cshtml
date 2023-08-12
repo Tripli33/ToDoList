@@ -3,7 +3,7 @@
     ViewData["Title"] = "Task Form";
 }
 <div>
-    <partial name="_AuthentificationPanel" />
+    <partial name="_AuthentificationPanel"/>
 </div>
 <h1>ADD TASK</h1>
 <form asp-controller="Task" asp-action="TaskForm" method="post">
@@ -23,7 +23,9 @@
     <div>
         <label asp-for="Description">Description:</label>
         <input asp-for="Description"/>
-        <p><i>Can be empty</i></p>
+        <p>
+            <i>Can be empty</i>
+        </p>
     </div>
     <div>
         <label asp-for="DeadLine">Deadline:</label>
@@ -41,7 +43,8 @@
     </div>
     <div>
         <button type="submit">Confirm</button>
-        <button><a asp-controller="Task" asp-action="Index">Back</a></button>
+        <button>
+            <a asp-controller="Task" asp-action="Index">Back</a>
+        </button>
     </div>
 </form>
-

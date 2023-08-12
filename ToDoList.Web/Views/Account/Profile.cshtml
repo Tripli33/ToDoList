@@ -2,7 +2,7 @@
 <div>
     <form asp-controller="Account" asp-action="ChangeUserName">
         <label asp-for="UserName"></label>
-        <input asp-for="UserName" value=@Model.UserName>
+        <input asp-for="UserName" value="@Model.UserName">
         <button type="submit">Change username</button>
         <span asp-validation-for="UserName"></span>
     </form>
@@ -27,7 +27,7 @@
             <span asp-validation-for="UserPasswordViewModel.ConfirmNewPassword"></span>
         </div>
         <button type="submit">Update password</button>
-    </form>      
+    </form>
 </div>
 <div>
     <p>Delete account:</p>
@@ -35,4 +35,6 @@
         <button type="submit">Delete your account</button>
     </form>
 </div>
-<button><a asp-controller="Task" asp-action="Index">Back</a></button>
+<button>
+    <a asp-controller="Task" asp-action="Index">Back</a>
+</button>

@@ -1,22 +1,25 @@
-@model IQueryable<ToDoList.Domain.Entities.User>
+@model IEnumerable<User>
 @{
     ViewData["Title"] = "Admin panel";
 }
 <h1>Admin panel</h1>
 <table>
     <thead>
-        <tr>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th></th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th></th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
-         @foreach (var user in Model ?? Enumerable.Empty<User>()){
-            <partial name="_UserSummary" model="user"/>
-         }
+    @foreach (var user in Model ?? Enumerable.Empty<User>())
+    {
+        <partial name="_UserSummary" model="user"/>
+    }
     </tbody>
 </table>
-<button><a asp-controller="Home" asp-action="Index">Back</a></button>
+<button>
+    <a asp-controller="Home" asp-action="Index">Back</a>
+</button>

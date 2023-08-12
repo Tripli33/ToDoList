@@ -4,5 +4,8 @@ namespace ToDoList.Web.Controllers;
 
 public class HomeController : Controller
 {
-    public ViewResult Index() => View();
+    public ViewResult Index()
+    {
+        return View();
+    }
 }

@@ -1,20 +1,27 @@
 @using System.Security.Claims
-
 <div>
-    @if(User.Identity.IsAuthenticated){
+    @if (User.Identity.IsAuthenticated)
+    {
         <div>
             <a asp-controller="Account" asp-action="Profile">@User.Identity.Name</a>
             <form asp-controller="Account" asp-action="Logout">
                 <button type="submit">Logout</button>
             </form>
-            @if("Admin" == Context.User.FindFirstValue(ClaimsIdentity.DefaultRoleClaimType)){
+            @if ("Admin" == Context.User.FindFirstValue(ClaimsIdentity.DefaultRoleClaimType))
+            {
                 <a asp-controller="Account" asp-action="AdminPanel">Admin panel</a>
             }
         </div>
-    }else{
+    }
+    else
+    {
         <div>
-            <button><a asp-controller="Account" asp-action="Register">Register</a></button>
-            <button><a asp-controller="Account" asp-action="Login">Login</a></button>
+            <button>
+                <a asp-controller="Account" asp-action="Register">Register</a>
+            </button>
+            <button>
+                <a asp-controller="Account" asp-action="Login">Login</a>
+            </button>
         </div>
     }
 </div>

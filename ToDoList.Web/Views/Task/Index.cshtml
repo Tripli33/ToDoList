@@ -3,7 +3,7 @@
     ViewData["Title"] = "Index";
 }
 <div>
-    <partial name="_AuthentificationPanel" />
+    <partial name="_AuthentificationPanel"/>
 </div>
 <form>
     <h1>TASK LIST</h1>
@@ -11,32 +11,30 @@
 </form>
 <table>
     <thead>
-        <tr>
-            <th>
-                <sort-header page-action="Index" property="@Model.TaskSortHeaderInfo.TitleSort" property-name="Title"></sort-header>
-            </th>
-            <th>Description</th>
-            <th>
-                <sort-header page-action="Index" property="@Model.TaskSortHeaderInfo.DeadLineSort" property-name="Deadline"></sort-header>
-            </th>
-            <th>
-                <sort-header page-action="Index" property="@Model.TaskSortHeaderInfo.PrioritySort" property-name="Property"></sort-header>
-            </th>
-            <th>
-                <sort-header page-action="Index" property="@Model.TaskSortHeaderInfo.StatusSort" property-name="Status"></sort-header>
-            </th>
-            <th></th>
-            <th></th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>
+            <sort-header page-action="Index" property="@Model.TaskSortHeaderInfo.TitleSort" property-name="Title"></sort-header>
+        </th>
+        <th>Description</th>
+        <th>
+            <sort-header page-action="Index" property="@Model.TaskSortHeaderInfo.DeadLineSort" property-name="Deadline"></sort-header>
+        </th>
+        <th>
+            <sort-header page-action="Index" property="@Model.TaskSortHeaderInfo.PrioritySort" property-name="Property"></sort-header>
+        </th>
+        <th>
+            <sort-header page-action="Index" property="@Model.TaskSortHeaderInfo.StatusSort" property-name="Status"></sort-header>
+        </th>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
-        @foreach (var task in Model?.Tasks ?? Enumerable.Empty<TaskEntity>())
-        {
-            <partial name="_TaskSummary" model="task"/>
-        }
+    @foreach (var task in Model?.Tasks ?? Enumerable.Empty<TaskEntity>())
+    {
+        <partial name="_TaskSummary" model="task"/>
+    }
     </tbody>
 </table>
 <page-link paging-info="@Model?.PagingInfo" page-action="Index"></page-link>
-
-

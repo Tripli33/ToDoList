@@ -1,4 +1,4 @@
-@model ToDoList.Domain.Entities.User
+@model User
 @{
     ViewData["Title"] = "Register";
 }
@@ -26,6 +26,8 @@
     </div>
     <div>
         <button type="submit">Register</button>
-        <button><a asp-controller="Home" asp-action="Index">Back</a></button>
+        <button>
+            <a asp-controller="Home" asp-action="Index">Back</a>
+        </button>
     </div>
 </form>

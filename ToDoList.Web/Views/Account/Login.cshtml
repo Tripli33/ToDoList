@@ -8,7 +8,9 @@
         <label asp-for="EmailOrUserName">Login:</label>
         <input asp-for="EmailOrUserName"/>
         <span asp-validation-for="EmailOrUserName"></span>
-        <p><i>(Email or password)</i></p>
+        <p>
+            <i>(Email or password)</i>
+        </p>
     </div>
     <div>
         <label asp-for="Password">Password:</label>
@@ -17,6 +19,8 @@
     </div>
     <div>
         <button type="submit">Login</button>
-        <button><a asp-controller="Home" asp-action="Index">Back</a></button>
+        <button>
+            <a asp-controller="Home" asp-action="Index">Back</a>
+        </button>
     </div>
 </form>

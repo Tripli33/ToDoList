@@ -16,17 +16,17 @@ public class SortHeaderTagHelper : TagHelper
         _urlHelperFactory = urlHelperFactory;
     }
 
-    [ViewContext]
-    [HtmlAttributeNotBound]
-    public ViewContext ViewContext { get; set; } = null!;
+    [ViewContext] [HtmlAttributeNotBound] public ViewContext ViewContext { get; set; } = null!;
+
     public string? PageAction { get; set; }
     public SortState Property { get; set; }
-    public string PropertyName { get; set; } = String.Empty;
+    public string PropertyName { get; set; } = string.Empty;
+
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
-        IUrlHelper urlHelper = _urlHelperFactory.GetUrlHelper(ViewContext);
+        var urlHelper = _urlHelperFactory.GetUrlHelper(ViewContext);
         TagBuilder tag = new("a");
-        tag.Attributes["href"] = urlHelper.Action(PageAction, new {sortOrder = Property});
+        tag.Attributes["href"] = urlHelper.Action(PageAction, new { sortOrder = Property });
         tag.InnerHtml.Append(PropertyName);
         output.Content.AppendHtml(tag);
     }

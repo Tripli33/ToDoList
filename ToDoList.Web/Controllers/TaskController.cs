@@ -1,82 +1,86 @@
-using Microsoft.AspNetCore.Mvc;
-using ToDoList.Infrastructure.Interfaces;
-using ToDoList.Domain.Enums;
-using ToDoList.Service.Interfaces;
-using ToDoList.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using ToDoList.Domain.Entities;
+using ToDoList.Domain.Enums;
 using ToDoList.Domain.ViewModels;
+using ToDoList.Service.Interfaces;
 
 namespace ToDoList.Web.Controllers;
+
 [Authorize]
 public class TaskController : Controller
 {
-    private readonly ITaskRepository _taskRepository;
-    private readonly ITaskService _taskService;
+    private readonly IServiceManager _serviceManager;
     public int pageSize = 10;
 
-    public TaskController(ITaskRepository taskRepository, ITaskService taskService)
+    public TaskController(IServiceManager serviceManager)
     {
-        _taskRepository = taskRepository;
-        _taskService = taskService;
+        _serviceManager = serviceManager;
     }
+
     public IActionResult Index(SortState sortOrder = SortState.DeadLineAsc, int taskPage = 1)
     {
-        var email = User.Identity?.Name ?? String.Empty;
-        var allTasks = _taskRepository.GetUserTasksByEmail(email);
-        allTasks = _taskService.SortTaskBySortStateCategory(allTasks, sortOrder);
-        return View(new TaskListViewModel(){
+        var email = User.Identity?.Name ?? string.Empty;
+        var allTasks = _serviceManager.TaskService.GetAllTasks(email, false);
+        allTasks = _serviceManager.TaskService.SortTaskBySortStateCategory(allTasks, sortOrder);
+        return View(new TaskListViewModel
+        {
             Tasks = allTasks
-            .Skip((taskPage - 1) * pageSize)
-            .Take(pageSize),
+                .Skip((taskPage - 1) * pageSize)
+                .Take(pageSize),
             TaskSortHeaderInfo = new TaskSortHeaderInfo(sortOrder),
-            PagingInfo = new PagingInfo(){
+            PagingInfo = new PagingInfo
+            {
                 TotalItems = allTasks.Count(),
                 ItemsPerPage = pageSize,
                 CurrentPage = taskPage
             }
         });
     }
-    public async Task<ActionResult> UpdateTask(long taskId)
+
+    public ActionResult UpdateTask(long taskId)
     {
-        var task = await _taskRepository.SelectAsync(taskId);
+        var email = User.Identity?.Name ?? string.Empty;
+        var task = _serviceManager.TaskService.GetTask(email, taskId, true);
         return View("TaskForm", task);
     }
-    public async Task<IActionResult> DeleteTask(long taskId)
+
+    public IActionResult DeleteTask(long taskId)
     {
-        await _taskRepository.DeleteByIdAsync(taskId);
+        var email = User.Identity?.Name ?? string.Empty;
+        _serviceManager.TaskService.DeleteTask(email, taskId);
         return RedirectToAction("Index");
     }
-    public async Task<IActionResult> StartTask(long taskId)
+
+    public IActionResult StartTask(long taskId)
     {
-        await _taskService.UpdateTaskStatus(taskId, Status.InProgress);
+        var email = User.Identity?.Name ?? string.Empty;
+        _serviceManager.TaskService.UpdateTaskStatus(email, taskId, Status.InProgress);
         return RedirectToAction("Index");
     }
-    public async Task<IActionResult> CloseTask(long taskId)
+
+    public IActionResult CloseTask(long taskId)
     {
-        await _taskService.UpdateTaskStatus(taskId, Status.Completed);
+        var email = User.Identity?.Name ?? string.Empty;
+        _serviceManager.TaskService.UpdateTaskStatus(email, taskId, Status.Completed);
         return RedirectToAction("Index");
     }
+
     [HttpGet]
     public ViewResult TaskForm()
     {
         return View();
     }
+
     [HttpPost]
-    public async Task<IActionResult> TaskForm(TaskEntity task)
+    public IActionResult TaskForm(TaskEntity task)
     {
-        var userEmail = User.Identity?.Name ?? String.Empty;
-        if (!ModelState.IsValid)
-        {
-            return View();
-        }
+        var email = User.Identity?.Name ?? string.Empty;
+        if (!ModelState.IsValid) return View();
         if (task.Id != 0)
-        {
-            await _taskRepository.UpdateUserTaskAsync(task, userEmail);
-        }
+            _serviceManager.TaskService.UpdateTask(task);
         else
-        {
-            await _taskRepository.CreateUserTaskAsync(task, userEmail);
-        }
+            _serviceManager.TaskService.CreateTask(email, task);
         return RedirectToAction("Index");
     }
 }

@@ -2,9 +2,12 @@
     ViewData["Title"] = "Index";
 }
 <div>
-    <partial name="_AuthentificationPanel" />
-    @if (User.Identity.IsAuthenticated){
-        <button><a asp-controller="Task" asp-action="Index">tasks</a></button>
+    <partial name="_AuthentificationPanel"/>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <button>
+            <a asp-controller="Task" asp-action="Index">tasks</a>
+        </button>
     }
 </div>
 <div>
