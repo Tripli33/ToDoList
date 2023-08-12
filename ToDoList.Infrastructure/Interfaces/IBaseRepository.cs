@@ -1,13 +1,12 @@
+using System.Linq.Expressions;
+
 namespace ToDoList.Infrastructure.Interfaces;
 
 public interface IBaseRepository<T>
 {
-    Task CreateAsync(T entity);
-
-    Task<T> SelectAsync(long entityId);
-
-    Task UpdateAsync(T entity);
-
-    Task DeleteAsync(T entity);
-    Task DeleteByIdAsync(long entityId);
+    IQueryable<T> FindAll(bool trackChanges);
+    IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges);
+    void Create(T entity);
+    void Update(T entity);
+    void Delete(T entity);
 }

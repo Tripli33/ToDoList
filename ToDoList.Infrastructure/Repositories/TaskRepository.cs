@@ -1,73 +1,46 @@
-using Microsoft.EntityFrameworkCore;
 using ToDoList.Domain.Entities;
 using ToDoList.Infrastructure.Interfaces;
 
 namespace ToDoList.Infrastructure.Repositories;
 
-public class TaskRepository : ITaskRepository
+public class TaskRepository : BaseRepository<TaskEntity>, ITaskRepository
 {
-    private readonly ApplicationContext _applicationContext;
-
-    public TaskRepository(ApplicationContext applicationContext)
+    public TaskRepository(ApplicationContext appContext) : base(appContext)
     {
-        _applicationContext = applicationContext;
     }
 
-    public async Task CreateAsync(TaskEntity entity)
+    public void CreateTask(TaskEntity task)
     {
-        await _applicationContext.Tasks.AddAsync(entity);
-        await _applicationContext.SaveChangesAsync();
+        Create(task);
     }
 
-    public async Task CreateUserTaskAsync(TaskEntity entity, string userEmail)
+    public void DeleteTask(TaskEntity task)
     {
-        var user = await _applicationContext.Users.FirstOrDefaultAsync(user => user.Email == userEmail);
-        user.Tasks.Add(entity);
-        await _applicationContext.SaveChangesAsync();
+        Delete(task);
     }
 
-    public async Task DeleteAsync(TaskEntity entity)
+    public IEnumerable<TaskEntity> GetAllTasks(long userId, bool trackChanges)
     {
-        _applicationContext.Remove(entity);
-        await _applicationContext.SaveChangesAsync();
+        return FindByCondition(t => t.Id.Equals(userId), trackChanges).ToList();
     }
 
-    public async Task DeleteByIdAsync(long entityId)
+    public IEnumerable<TaskEntity> GetAllTasks(string email, bool trackChanges)
     {
-        var task = await _applicationContext.Tasks.FindAsync(entityId);
-        _applicationContext.Remove(task);
-        await _applicationContext.SaveChangesAsync();
+        return FindByCondition(t => t.User!.Email.Equals(email), trackChanges).ToList();
     }
 
-    public IQueryable<TaskEntity> GetAllTasks()
+    public TaskEntity GetTask(long userId, long taskId, bool trackChanges)
     {
-        return _applicationContext.Tasks;
+        return FindByCondition(t => t.UserId.Equals(userId) && t.Id.Equals(taskId), trackChanges).SingleOrDefault();
     }
 
-    public IQueryable<TaskEntity> GetUserTasksByEmail(string email)
+    public TaskEntity GetTask(string email, long taskId, bool trackChanges)
     {
-        var tasks = _applicationContext.Tasks.Where(t => t.User.Email == email);
-        return tasks;
+        return FindByCondition(t => t.User!.Email.Equals(email) && t.Id.Equals(taskId), trackChanges).SingleOrDefault();
     }
 
-    public async Task<TaskEntity> SelectAsync(long entityId)
+    public void UpdateTask(TaskEntity task)
     {
-        var task = await _applicationContext.Tasks.FindAsync(entityId);
-        return task;
-    }
-
-    public async Task UpdateAsync(TaskEntity entity)
-    {
-        _applicationContext.Tasks.Update(entity);
-        await _applicationContext.SaveChangesAsync();
-    }
-
-    public async Task UpdateUserTaskAsync(TaskEntity entity, string userEmail)
-    {
-        var user = await _applicationContext.Users.FirstOrDefaultAsync(user => user.Email == userEmail);
-        var task = user.Tasks.FirstOrDefault(task => task.Id == entity.Id);
-        user.Tasks.Remove(task);
-        user.Tasks.Add(entity);
-        await _applicationContext.SaveChangesAsync();
+        Update(task);
     }
 }

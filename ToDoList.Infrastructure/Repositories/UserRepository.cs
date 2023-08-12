@@ -1,76 +1,73 @@
 using ToDoList.Domain.Entities;
 using ToDoList.Domain.Enums;
 using ToDoList.Infrastructure.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace ToDoList.Infrastructure.Repositories;
 
-public class UserRepository : IUserRepository
+public class UserRepository : BaseRepository<User>, IUserRepository
 {
-    private readonly ApplicationContext _applicationContext;
-
-    public UserRepository(ApplicationContext applicationContext)
+    public UserRepository(ApplicationContext appContext) : base(appContext)
     {
-        _applicationContext = applicationContext;
     }
 
-    public async Task CreateAsync(User entity)
+    public void CreateUser(User user)
     {
-        await _applicationContext.Users.AddAsync(entity);
-        await _applicationContext.SaveChangesAsync();
+        Create(user);
     }
 
-    public async Task DeleteAsync(User entity)
+    public void DeleteUser(User user)
     {
-        _applicationContext.Remove(entity);
-        await _applicationContext.SaveChangesAsync();
+        Delete(user);
     }
 
-    public async Task DeleteByIdAsync(long entityId)
+    public IEnumerable<User> GetAllUsers(bool trackChanges)
     {
-        var user = await _applicationContext.Users.FindAsync(entityId);
-        _applicationContext.Remove(user);
-        await _applicationContext.SaveChangesAsync();
+        return FindAll(trackChanges).ToList();
     }
 
-    public IQueryable<User> GetAllUsers()
+    public IEnumerable<User> GetAllUsersByRole(Role role, bool trackChanges)
     {
-        return _applicationContext.Users;
+        return FindByCondition(u => u.Role.Equals(role), trackChanges).ToList();
     }
 
-    public IQueryable<User> GetAllUserWithRoleUser()
+    public User GetUser(long userId, bool trackChanges)
     {
-        return _applicationContext.Users.Where(u => u.Role == Role.User);
+        return FindByCondition(u => u.UserId.Equals(userId), trackChanges).SingleOrDefault();
     }
 
-    public async Task<User> GetUserByEmailAsync(string email)
+    public User GetUserByEmail(string email, bool trackChanges)
     {
-        var user = await _applicationContext.Users.FirstOrDefaultAsync(user => user.Email == email);
-        return user;
+        return FindByCondition(u => u.Email.Equals(email), trackChanges).SingleOrDefault();
     }
 
-    public async Task<User> GetUserByEmailOrUserNameAsync(string emailOrUserName)
+    public User GetUserByName(string userName, bool trackChanges)
     {
-        var user = await _applicationContext.Users.FirstOrDefaultAsync(user => user.Email == emailOrUserName
-        || user.UserName == emailOrUserName);
-        return user;
+        return FindByCondition(u => u.UserName.Equals(userName), trackChanges).SingleOrDefault();
     }
 
-    public async Task<User> GetUserByUserNameAsync(string userName)
+    public void UpdateUser(User user)
     {
-        var user = await _applicationContext.Users.FirstOrDefaultAsync(user => user.UserName == userName);
-        return user;
+        Update(user);
     }
 
-    public async Task<User> SelectAsync(long entityId)
+    public bool UserEmailExists(string email)
     {
-        var user = await _applicationContext.Users.FindAsync(entityId);
-        return user;
+        return FindAll(false).Any(u => u.Email.Equals(email));
     }
 
-    public async Task UpdateAsync(User entity)
+    public bool UserExists(long userId)
     {
-        _applicationContext.Users.Update(entity);
-        await _applicationContext.SaveChangesAsync();
+        return FindAll(false).Any(u => u.UserId.Equals(userId));
+    }
+
+    public bool UserNameExists(string userName)
+    {
+        return FindAll(false).Any(u => u.UserName.Equals(userName));
+    }
+
+    public bool UserNameOrEmailExists(string emailOrUserName)
+    {
+        return FindAll(false).Any(u => u.UserName.Equals(emailOrUserName)
+                                       || u.Email.Equals(emailOrUserName));
     }
 }

@@ -5,10 +5,11 @@ namespace ToDoList.Infrastructure;
 
 public class ApplicationContext : DbContext
 {
-    public DbSet<TaskEntity> Tasks { get; set; }
-    public DbSet<User> Users { get; set; }
     public ApplicationContext(DbContextOptions options) : base(options)
     {
         Database.EnsureCreated();
     }
+
+    public DbSet<TaskEntity> Tasks { get; set; }
+    public DbSet<User> Users { get; set; }
 }
