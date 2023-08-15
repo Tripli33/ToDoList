@@ -50,6 +50,6 @@ public class AccountService : IAccountService
         var user = emailOrUserName.Contains('@')
         ? _repositoryManager.UserRepository.GetUserByEmail(emailOrUserName, trackChanges: false)
         : _repositoryManager.UserRepository.GetUserByName(emailOrUserName, trackChanges:false);
-        return user is null || user.Password != userLoginViewModel.Password;        
+        return user is null || user.Password != userLoginViewModel.Password || user.Active == false;        
     }
 }

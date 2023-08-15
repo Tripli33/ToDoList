@@ -105,6 +105,12 @@ public class AccountController : Controller
         return RedirectToAction("AdminPanel");
     }
 
+    public IActionResult ChangeUserActive(long userId)
+    {
+        _serviceManager.UserService.ChangeUserActive(userId);
+        return RedirectToAction("AdminPanel");
+    }
+
     [AcceptVerbs("Post", "Get")]
     public bool CheckUserName(string userName)
     {

@@ -31,5 +31,6 @@ public class User
     [Compare("Password")]
     public string ConfirmPassword { get; set; } = String.Empty;
     public Role Role { get; set; } = Role.User;
+    public bool Active { get; set; } = true;
     public ICollection<TaskEntity> Tasks { get; set; } = new List<TaskEntity>();
 }

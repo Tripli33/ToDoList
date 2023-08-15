@@ -14,6 +14,19 @@ public class UserService : IUserService
     {
         _repositoryManager = repositoryManager;
     }
+
+    public void ChangeUserActive(long userId)
+    {
+        var user = GetUser(userId, trackChanges: true);
+        user.Active = !user.Active;
+        _repositoryManager.Save();
+    }
+    public void ChangeUserActive(string email)
+    {
+        var user = GetUserByEmail(email, trackChanges: true);
+        user.Active = !user.Active;
+        _repositoryManager.Save();
+    }
     public void DeleteUser(User user)
     {
         _repositoryManager.UserRepository.DeleteUser(user);
@@ -105,6 +118,16 @@ public class UserService : IUserService
     _repositoryManager.UserRepository.UserEmailExists(email);
     public bool UserExists(long userId) => 
     _repositoryManager.UserRepository.UserExists(userId);
+    public bool UserIsActive(long userId)
+    {
+        var user = GetUser(userId, trackChanges: false);
+        return user.Active;
+    }
+    public bool UserIsActive(string email)
+    {
+        var user = GetUserByEmail(email, trackChanges: false);
+        return user.Active;
+    }
     public bool UserNameExists(string userName) =>
     _repositoryManager.UserRepository.UserNameExists(userName);
     public bool UserNameOrEmailExists(string emailOrUserName) =>

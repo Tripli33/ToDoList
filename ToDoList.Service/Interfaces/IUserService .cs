@@ -25,4 +25,8 @@ public interface IUserService
     void DeleteUser(User user);
     void DeleteUserById(long userId);
     void DeleteUserByEmail(string email);
+    void ChangeUserActive(long userId);
+    void ChangeUserActive(string email);
+    bool UserIsActive(long userId);
+    bool UserIsActive(string email);
 }

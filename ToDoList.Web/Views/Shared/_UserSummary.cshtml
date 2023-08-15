@@ -1,8 +1,13 @@
 @model User
+@{
+    string userActiveMessage = Model.Active ? "Ban" : "Unban";
+    string titleUserActiveMessage = Model.Active ? "unbanned" : "banned";
+}
 <tr>
     <td>@Model.UserName</td>
     <td>@Model.Email</td>
     <td>@Model.Role</td>
+    <td>@titleUserActiveMessage</td>
     <td>
         <form asp-controller="Account" asp-action="UpdateUserRole" method="post">
             <input type="hidden" name="userId" value="@Model.UserId">
@@ -10,9 +15,18 @@
         </form>
     </td>
     <td>
-        <form asp-controller="Account" asp-action="DeleteUser" method="post">
+        <form asp-controller="Account" asp-action="ChangeUserActive" method="post">
             <input type="hidden" name="userId" value="@Model.UserId">
-            <button type="submit">Delete</button>
+            <button type="submit">@userActiveMessage</button>
         </form>
     </td>
+    @if (!Model.Active)
+    {
+        <td>
+            <form asp-controller="Account" asp-action="DeleteUser" method="post">
+                <input type="hidden" name="userId" value="@Model.UserId">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    }
 </tr>
